@@ -1,3 +1,5 @@
 # PoshGatherRemoteServerInfo
-PS-script to find systeminfo with get-wmiobject fom remote windows servers.
-Handy if you cant use psremoting
+PS-script to find systeminfo with get-wmiobject from remote windows servers.
+Handy if you cant use psremoting...
+
+
