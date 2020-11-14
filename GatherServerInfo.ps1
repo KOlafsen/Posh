@@ -11,7 +11,7 @@ foreach ( $server in $Servers ) {
         $CPUAndMemory = get-wmiobject Win32_ComputerSystem -cn $server | select @{name="PhysicalMemory";Expression={"{0:N2}" -f($_.TotalPhysicalMemory/1gb).tostring("N0")}},NumberOfProcessors,Name
         $gb = ' GB'
         $mhz = ' MHZ'
-        $Processor = get-wmiobject Win32_Processor -ComputerName $Server | Select-Object Name
+        $Processor = get-wmiobject Win32_Processor -ComputerName $Server | Select-Object Name, NumberOfLogicalProcessors, NumberOfCores
         $Disk = get-wmiobject Win32_LogicalDisk -ComputerName $Server
         $Ip = gwmi Win32_NetworkAdapterConfiguration -ComputerName $Server | ? {$_.IPEnabled} 
         $lastboot= Get-WmiObject win32_OperatingSystem -computer $server | Select csname, @{label=’LastBootUTime’ ;expression={$_.ConvertToDateTime($_.LastBootUpTime)}}
@@ -30,7 +30,8 @@ foreach ( $server in $Servers ) {
         IPv4Adress                       = $Ip.IPAddress | select -First 1
         CPUName                          = $Processor.Name | select -First 1
         NumberofCPUs                     = $CPUAndMemory.numberofprocessors
-        NumberofCPUCores                 = $Processor.NumberOfCores.Count
+        NumberofCPUCores                 = $Processor.NumberOfCores
+        NumberOfCPUSockets               = $Processor.NumberOfLogicalProcessors
         Memory                           = $CPUAndMemory.PhysicalMemory + $gb
         LogicalDisks                     = ($Disk | ? { $_.DriveType -eq 3 -and $_.Size -notlike $null } | % { "[{0}] {1}\ ({2}) = {3:N2} / {4:N2} GB ({5:N1}% Free)" -f $_.FileSystem, $_.DeviceID, $_.VolumeName, ($_.FreeSpace / 1GB), ($_.Size / 1GB), (($_.FreeSpace / $_.Size) * 100) } | Out-String).Trim()
         LastBoot                         = $lastboot.LastBootUTime                    
@@ -41,10 +42,11 @@ foreach ( $server in $Servers ) {
       
         
                
-    }
-
+    } 
+    
     #Shows your data
     $Object
+      
     
         
     }
