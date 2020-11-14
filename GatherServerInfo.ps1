@@ -1,7 +1,9 @@
-﻿ $Servers = Get-Content 'C:\power\1.txt'
+#Your list of servers
+ $Servers = Get-Content 'C:\power\1.txt'
  $TodayDate = Get-Date
  $RPCFails = @()
 
+#Get information from every server in your list, you can add more variables if you want more information about the remote systems.
 foreach ( $server in $Servers ) {
     try { 
         $Sys = get-wmiobject Win32_ComputerSystem -ComputerName $server
@@ -17,9 +19,8 @@ foreach ( $server in $Servers ) {
         $service = Get-wmiobject win32_service -computername $server |where {$_.startmode -like 'Auto'}  | select Name, DisplayName, Status | out-string
         
        
-
+        ##Creates a pscustom-object with the naming you want.
         $Object = [PScustomobject]  @{
-        
         ServerName                       = $sys.Name
         Manufacturer                     = $sys.Manufacturer
         Domain                           = $sys.Domain
@@ -42,7 +43,7 @@ foreach ( $server in $Servers ) {
                
     }
 
-    
+    #Shows your data
     $Object
     
         
