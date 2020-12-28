@@ -1,4 +1,4 @@
-## Kjetil Olafsen @Intility AS December 2020 ##
+## Kjetil Olafsen, December 2020 ##
 
 # Your list of servers
  $Servers = Get-Content 'C:\power\1.txt'
